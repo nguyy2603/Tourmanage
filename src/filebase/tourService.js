@@ -2,7 +2,7 @@
 //trên firestore,giúp các trang/component
 //chỉ cần gọi hàm mà k cần biết chi tiết cú pháp firestore
 
-import { db } from './Config'; // Thay đổi đường dẫn này cho khớp với file cấu hình Firebase trong src
+import { db } from './config';
 import {collection,query,orderBy,getDocs,addDoc,updateDoc,deleteDoc,doc,serverTimestamp,} from 'firebase/firestore';
 
 const tourCollectionRef = collection(db, 'tours');
