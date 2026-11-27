@@ -34,7 +34,7 @@ export function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
-  const register = async ({ displayName, email, password, role }) => {
+  const register = async ({ displayName, email, password }) => {
     const credential = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(credential.user, { displayName });
 
@@ -42,7 +42,7 @@ export function AuthProvider({ children }) {
       uid: credential.user.uid,
       displayName,
       email,
-      role: role === 'admin' ? 'admin' : 'member',
+      role: 'member',
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     };

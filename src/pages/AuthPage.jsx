@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 export function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ displayName: '', email: '', password: '', confirmPassword: '', role: 'member' });
+  const [form, setForm] = useState({ displayName: '', email: '', password: '', confirmPassword: '' });
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -21,7 +21,7 @@ export function RegisterPage() {
     try {
       setSubmitting(true);
       await register(form);
-      navigate(form.role === 'admin' ? '/quan-ly-tour' : '/', { replace: true });
+      navigate('/', { replace: true });
     } catch (err) {
       setError(err.code === 'auth/email-already-in-use'
         ? 'Email này đã được đăng ký.'
@@ -40,13 +40,6 @@ export function RegisterPage() {
         <AuthField label="Email" type="email" value={form.email} onChange={(value) => setForm({ ...form, email: value })} required />
         <AuthField label="Mật khẩu" type="password" value={form.password} onChange={(value) => setForm({ ...form, password: value })} required />
         <AuthField label="Xác nhận mật khẩu" type="password" value={form.confirmPassword} onChange={(value) => setForm({ ...form, confirmPassword: value })} required />
-        <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Vai trò</label>
-          <select value={form.role} onChange={(event) => setForm({ ...form, role: event.target.value })} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 outline-none focus:border-blue-500">
-            <option value="member">Thành viên</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
         {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
         <button disabled={submitting} className="w-full rounded-lg bg-blue-600 px-4 py-2.5 font-medium text-white hover:bg-blue-700 disabled:opacity-60">
           {submitting ? 'Đang đăng ký...' : 'Đăng ký'}

@@ -1,11 +1,52 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TOURS_DATA } from '../data/tourdata';
+import { getTours } from '../filebase/tourService';
+
+const DEFAULT_TOUR_IMAGE = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80';
+
 export const Tournoibac = () => {
     const [activeCategory, setActiveCategory] = useState('Tất cả');
+    const [firestoreTours, setFirestoreTours] = useState([]);
+
+    useEffect(() => {
+        let cancelled = false;
+
+        const loadTours = async () => {
+            try {
+                const data = await getTours();
+                if (!cancelled) setFirestoreTours(data);
+            } catch (error) {
+                console.error('Không thể tải danh sách tour:', error);
+            }
+        };
+
+        loadTours();
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
+    const registeredTours = firestoreTours.map((tour) => ({
+        id: tour.id,
+        category: tour.category || 'Miền Trung',
+        discount: tour.discount,
+        badge: tour.badge || null,
+        duration: tour.duration || '',
+        location: tour.destination || tour.departure || '',
+        rating: tour.rating || '5.0',
+        reviews: tour.reviews || 0,
+        title: tour.name || 'Tour du lịch',
+        description: tour.description || '',
+        oldPrice: '',
+        price: `${Number(tour.price || 0).toLocaleString('vi-VN')}đ`,
+        image: tour.image || DEFAULT_TOUR_IMAGE,
+    }));
+
+    const displayTours = registeredTours.length > 0 ? registeredTours : TOURS_DATA;
     const filteredTours =
         activeCategory === 'Tất cả'
-            ? TOURS_DATA
-            : TOURS_DATA.filter((tour) => tour.category === activeCategory);
+            ? displayTours
+            : displayTours.filter((tour) => tour.category === activeCategory);
 
     const CATEGORIES = ['Tất cả', 'Miền Trung', 'Miền Bắc', 'Miền Nam', 'Tour Quốc Tế'];
     return (
@@ -58,6 +99,10 @@ export const Tournoibac = () => {
                                     <img
                                         src={tour.image}
                                         alt={tour.title}
+                                        onError={(event) => {
+                                            event.currentTarget.onerror = null;
+                                            event.currentTarget.src = DEFAULT_TOUR_IMAGE;
+                                        }}
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     />
 

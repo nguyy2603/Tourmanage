@@ -44,6 +44,11 @@ function Footer() {
               </Link>
             </li>
             <li>
+              <Link to="/gioi-thieu" className="hover:text-blue-400 transition-colors">
+                Giới thiệu
+              </Link>
+            </li>
+            <li>
               <Link to="/quan-ly-tour" className="hover:text-blue-400 transition-colors">
                 Quản lý tour
               </Link>

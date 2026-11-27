@@ -4,6 +4,7 @@ import './App.css'
 import { Layout } from './components/Layout'
 import { Home } from './pages/Home'
 import { News } from './pages/News'
+import { About } from './pages/About'
 import { NotFound } from './pages/NotFound'
 import { TourManagement } from './pages/TourManagement'
 import { Routes, Route } from 'react-router-dom'
@@ -18,6 +19,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="tin-tuc" element={<News/>} />
+          <Route path="gioi-thieu" element={<About />} />
           <Route path="dang-nhap" element={<LoginPage />} />
           <Route path="dang-ky" element={<RegisterPage />} />
           <Route path="quan-ly-tour" element={

@@ -26,7 +26,26 @@ export const TourManagement = () => {
     }
   };
 
-  
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadRegisteredTours = async () => {
+      try {
+        const data = await getTours();
+        if (!cancelled) setTours(data);
+      } catch (err) {
+        console.error(err);
+        if (!cancelled) setError('Không thể tải danh sách tour từ Firestore.');
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    loadRegisteredTours();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleOpenAdd = () => {
     setEditingTour(null);
@@ -150,10 +169,14 @@ export const TourManagement = () => {
               className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col justify-between"
             >
               <div>
-                {tour.image && (
+                {(tour.image || tour.name) && (
                   <img
-                    src={tour.image}
+                    src={tour.image || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80'}
                     alt={tour.name}
+                    onError={(event) => {
+                      event.currentTarget.onerror = null;
+                      event.currentTarget.src = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80';
+                    }}
                     className="w-full h-44 object-cover bg-gray-100"
                   />
                 )}
@@ -206,6 +229,7 @@ export const TourManagement = () => {
       {/* Modal thêm / sửa tour */}
       {showForm && (
         <TourFormModal
+          key={editingTour?.id || 'new-tour'}
           initialData={editingTour}
           saving={saving}
           onClose={handleCloseModal}
